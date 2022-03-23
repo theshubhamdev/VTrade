@@ -1,0 +1,26 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-vtrade-staging-154637-authRole",
+      "UnauthRoleArn": "arn:aws:iam::149384451136:role/amplify-vtrade-staging-154637-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::149384451136:role/amplify-vtrade-staging-154637-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-vtrade-staging-154637-deployment",
+      "UnauthRoleName": "amplify-vtrade-staging-154637-unauthRole",
+      "StackName": "amplify-vtrade-staging-154637",
+      "StackId": "arn:aws:cloudformation:ap-south-1:149384451136:stack/amplify-vtrade-staging-154637/f70aa0f0-8c1a-11ec-88b1-061fcfb1ea4a",
+      "AmplifyAppId": "d2sgexopbkoy4h"
+    },
+    "categories": {
+      "auth": {
+        "VTrade": {}
+      },
+      "function": {
+        "vtradefetchDataNSE": {
+          "deploymentBucketName": "amplify-vtrade-staging-154637-deployment",
+          "s3Key": "amplify-builds/vtradefetchDataNSE-LambdaLayerVersion3d02ede3-build.zip"
+        }
+      }
+    }
+  }
+}

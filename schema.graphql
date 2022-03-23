@@ -1,0 +1,357 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type DefaultValues @aws_api_key @aws_iam {
+  Api_key1: String
+  Api_key2: String
+  Api_key3: String
+  Api_key4: String
+  App_version: String
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+  _version: Int!
+  createdAt: AWSDateTime!
+  id: ID!
+  update_required: Boolean
+  updatedAt: AWSDateTime!
+}
+
+type ModelDefaultValuesConnection @aws_api_key @aws_iam {
+  items: [DefaultValues]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+type ModelOrderConnection @aws_api_key @aws_iam {
+  items: [Order]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+type ModelUserConnection @aws_api_key @aws_iam {
+  items: [User]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+type Mutation {
+  createDefaultValues(condition: ModelDefaultValuesConditionInput, input: CreateDefaultValuesInput!): DefaultValues @aws_api_key @aws_iam
+  createOrder(condition: ModelOrderConditionInput, input: CreateOrderInput!): Order @aws_api_key @aws_iam
+  createUser(condition: ModelUserConditionInput, input: CreateUserInput!): User @aws_api_key @aws_iam
+  deleteDefaultValues(condition: ModelDefaultValuesConditionInput, input: DeleteDefaultValuesInput!): DefaultValues @aws_api_key @aws_iam
+  deleteOrder(condition: ModelOrderConditionInput, input: DeleteOrderInput!): Order @aws_api_key @aws_iam
+  deleteUser(condition: ModelUserConditionInput, input: DeleteUserInput!): User @aws_api_key @aws_iam
+  updateDefaultValues(condition: ModelDefaultValuesConditionInput, input: UpdateDefaultValuesInput!): DefaultValues @aws_api_key @aws_iam
+  updateOrder(condition: ModelOrderConditionInput, input: UpdateOrderInput!): Order @aws_api_key @aws_iam
+  updateUser(condition: ModelUserConditionInput, input: UpdateUserInput!): User @aws_api_key @aws_iam
+}
+
+type Order @aws_api_key @aws_iam {
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+  _version: Int!
+  amount: Float!
+  createdAt: AWSDateTime!
+  id: ID!
+  quantity: Int!
+  status: STATUS
+  stock: String!
+  updatedAt: AWSDateTime!
+  userID: ID!
+}
+
+type Query {
+  getDefaultValues(id: ID!): DefaultValues @aws_api_key @aws_iam
+  getOrder(id: ID!): Order @aws_api_key @aws_iam
+  getUser(id: ID!): User @aws_api_key @aws_iam
+  listDefaultValues(filter: ModelDefaultValuesFilterInput, limit: Int, nextToken: String): ModelDefaultValuesConnection @aws_api_key @aws_iam
+  listOrders(filter: ModelOrderFilterInput, limit: Int, nextToken: String): ModelOrderConnection @aws_api_key @aws_iam
+  listUsers(filter: ModelUserFilterInput, limit: Int, nextToken: String): ModelUserConnection @aws_api_key @aws_iam
+  syncDefaultValues(filter: ModelDefaultValuesFilterInput, lastSync: AWSTimestamp, limit: Int, nextToken: String): ModelDefaultValuesConnection @aws_api_key @aws_iam
+  syncOrders(filter: ModelOrderFilterInput, lastSync: AWSTimestamp, limit: Int, nextToken: String): ModelOrderConnection @aws_api_key @aws_iam
+  syncUsers(filter: ModelUserFilterInput, lastSync: AWSTimestamp, limit: Int, nextToken: String): ModelUserConnection @aws_api_key @aws_iam
+}
+
+type Subscription {
+  onCreateDefaultValues: DefaultValues @aws_api_key @aws_iam @aws_subscribe(mutations : ["createDefaultValues"])
+  onCreateOrder: Order @aws_api_key @aws_iam @aws_subscribe(mutations : ["createOrder"])
+  onCreateUser: User @aws_api_key @aws_iam @aws_subscribe(mutations : ["createUser"])
+  onDeleteDefaultValues: DefaultValues @aws_api_key @aws_iam @aws_subscribe(mutations : ["deleteDefaultValues"])
+  onDeleteOrder: Order @aws_api_key @aws_iam @aws_subscribe(mutations : ["deleteOrder"])
+  onDeleteUser: User @aws_api_key @aws_iam @aws_subscribe(mutations : ["deleteUser"])
+  onUpdateDefaultValues: DefaultValues @aws_api_key @aws_iam @aws_subscribe(mutations : ["updateDefaultValues"])
+  onUpdateOrder: Order @aws_api_key @aws_iam @aws_subscribe(mutations : ["updateOrder"])
+  onUpdateUser: User @aws_api_key @aws_iam @aws_subscribe(mutations : ["updateUser"])
+}
+
+type User @aws_api_key @aws_iam {
+  Orders(filter: ModelOrderFilterInput, limit: Int, nextToken: String, sortDirection: ModelSortDirection): ModelOrderConnection
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+  _version: Int!
+  availableToTrade: Int!
+  createdAt: AWSDateTime!
+  email: String
+  id: ID!
+  name: String
+  trades: [String]
+  updatedAt: AWSDateTime!
+  vmoney: Int!
+  watchlist: [String]
+}
+
+enum ModelAttributeTypes {
+  _null
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+enum STATUS {
+  PENDING
+  SUCCESS
+}
+
+input CreateDefaultValuesInput {
+  Api_key1: String
+  Api_key2: String
+  Api_key3: String
+  Api_key4: String
+  App_version: String
+  _version: Int
+  id: ID
+  update_required: Boolean
+}
+
+input CreateOrderInput {
+  _version: Int
+  amount: Float!
+  id: ID
+  quantity: Int!
+  status: STATUS
+  stock: String!
+  userID: ID!
+}
+
+input CreateUserInput {
+  _version: Int
+  availableToTrade: Int!
+  email: String
+  id: ID
+  name: String
+  trades: [String]
+  vmoney: Int!
+  watchlist: [String]
+}
+
+input DeleteDefaultValuesInput {
+  _version: Int
+  id: ID!
+}
+
+input DeleteOrderInput {
+  _version: Int
+  id: ID!
+}
+
+input DeleteUserInput {
+  _version: Int
+  id: ID!
+}
+
+input ModelBooleanInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  eq: Boolean
+  ne: Boolean
+}
+
+input ModelDefaultValuesConditionInput {
+  Api_key1: ModelStringInput
+  Api_key2: ModelStringInput
+  Api_key3: ModelStringInput
+  Api_key4: ModelStringInput
+  App_version: ModelStringInput
+  and: [ModelDefaultValuesConditionInput]
+  not: ModelDefaultValuesConditionInput
+  or: [ModelDefaultValuesConditionInput]
+  update_required: ModelBooleanInput
+}
+
+input ModelDefaultValuesFilterInput {
+  Api_key1: ModelStringInput
+  Api_key2: ModelStringInput
+  Api_key3: ModelStringInput
+  Api_key4: ModelStringInput
+  App_version: ModelStringInput
+  and: [ModelDefaultValuesFilterInput]
+  id: ModelIDInput
+  not: ModelDefaultValuesFilterInput
+  or: [ModelDefaultValuesFilterInput]
+  update_required: ModelBooleanInput
+}
+
+input ModelFloatInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  between: [Float]
+  eq: Float
+  ge: Float
+  gt: Float
+  le: Float
+  lt: Float
+  ne: Float
+}
+
+input ModelIDInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  beginsWith: ID
+  between: [ID]
+  contains: ID
+  eq: ID
+  ge: ID
+  gt: ID
+  le: ID
+  lt: ID
+  ne: ID
+  notContains: ID
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  between: [Int]
+  eq: Int
+  ge: Int
+  gt: Int
+  le: Int
+  lt: Int
+  ne: Int
+}
+
+input ModelOrderConditionInput {
+  amount: ModelFloatInput
+  and: [ModelOrderConditionInput]
+  not: ModelOrderConditionInput
+  or: [ModelOrderConditionInput]
+  quantity: ModelIntInput
+  status: ModelSTATUSInput
+  stock: ModelStringInput
+  userID: ModelIDInput
+}
+
+input ModelOrderFilterInput {
+  amount: ModelFloatInput
+  and: [ModelOrderFilterInput]
+  id: ModelIDInput
+  not: ModelOrderFilterInput
+  or: [ModelOrderFilterInput]
+  quantity: ModelIntInput
+  status: ModelSTATUSInput
+  stock: ModelStringInput
+  userID: ModelIDInput
+}
+
+input ModelSTATUSInput {
+  eq: STATUS
+  ne: STATUS
+}
+
+input ModelSizeInput {
+  between: [Int]
+  eq: Int
+  ge: Int
+  gt: Int
+  le: Int
+  lt: Int
+  ne: Int
+}
+
+input ModelStringInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  beginsWith: String
+  between: [String]
+  contains: String
+  eq: String
+  ge: String
+  gt: String
+  le: String
+  lt: String
+  ne: String
+  notContains: String
+  size: ModelSizeInput
+}
+
+input ModelUserConditionInput {
+  and: [ModelUserConditionInput]
+  availableToTrade: ModelIntInput
+  email: ModelStringInput
+  name: ModelStringInput
+  not: ModelUserConditionInput
+  or: [ModelUserConditionInput]
+  trades: ModelStringInput
+  vmoney: ModelIntInput
+  watchlist: ModelStringInput
+}
+
+input ModelUserFilterInput {
+  and: [ModelUserFilterInput]
+  availableToTrade: ModelIntInput
+  email: ModelStringInput
+  id: ModelIDInput
+  name: ModelStringInput
+  not: ModelUserFilterInput
+  or: [ModelUserFilterInput]
+  trades: ModelStringInput
+  vmoney: ModelIntInput
+  watchlist: ModelStringInput
+}
+
+input UpdateDefaultValuesInput {
+  Api_key1: String
+  Api_key2: String
+  Api_key3: String
+  Api_key4: String
+  App_version: String
+  _version: Int
+  id: ID!
+  update_required: Boolean
+}
+
+input UpdateOrderInput {
+  _version: Int
+  amount: Float
+  id: ID!
+  quantity: Int
+  status: STATUS
+  stock: String
+  userID: ID
+}
+
+input UpdateUserInput {
+  _version: Int
+  availableToTrade: Int
+  email: String
+  id: ID!
+  name: String
+  trades: [String]
+  vmoney: Int
+  watchlist: [String]
+}

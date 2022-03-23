@@ -1,0 +1,35 @@
+type DefaultValues @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  Api_key1: String
+  Api_key2: String
+  Api_key3: String
+  Api_key4: String
+  App_version: String
+  update_required: Boolean
+}
+
+enum STATUS {
+  PENDING
+  SUCCESS
+}
+
+type Order @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  stock: String!
+  amount: Float!
+  quantity: Int!
+  userID: ID! @index(name: "byUser")
+  status: STATUS
+}
+
+type User @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  email: String
+  vmoney: Int!
+  availableToTrade: Int!
+  trades: [String]
+  watchlist: [String]
+  Orders: [Order] @hasMany(indexName: "byUser", fields: ["id"])
+}
+ 
