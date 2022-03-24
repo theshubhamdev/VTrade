@@ -1,7 +1,7 @@
 import {View, Text, TouchableOpacity, Alert} from 'react-native';
 import React from 'react';
 
-const Footer = ({amount, quantity, navigation, symbol}) => {
+const Footer = ({amount, quantity, navigation, symbol, tradeable}) => {
   const OnClickReview = () => {
     if (quantity <= 0 || quantity > 25000) {
       Alert.alert('Quantity Error', 'Quantity Must be between 1 and 25000');
@@ -11,6 +11,7 @@ const Footer = ({amount, quantity, navigation, symbol}) => {
       symbol: symbol,
       amount: amount.toFixed(2),
       quantity: quantity,
+      tradeable: tradeable,
     });
   };
   return (

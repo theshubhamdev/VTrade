@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, ScrollView, Alert} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, Alert, Image} from 'react-native';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/core';
 import {useForm} from 'react-hook-form';
 import {Auth} from 'aws-amplify';
+import Logo from '../../../../../assets/images/Logo_1.png';
+import {urlOpener} from '../../../../../App.js';
 
 const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -34,15 +36,14 @@ const SignUpScreen = () => {
   };
 
   const onTermsOfUsePressed = () => {
-    console.warn('onTermsOfUsePressed');
-  };
-
-  const onPrivacyPressed = () => {
-    console.warn('onPrivacyPressed');
+    urlOpener(
+      'https://github.com/theshubhamdev/Privacy_Policies/blob/main/VTrade_Policy.md',
+    );
   };
 
   return (
     <View style={styles.root}>
+      <Image source={Logo} style={styles.logo} resizeMode="contain" />
       <Text style={styles.title}>Create an account</Text>
 
       <CustomInput
@@ -98,12 +99,8 @@ const SignUpScreen = () => {
       <Text style={styles.text}>
         By registering, you confirm that you accept our{' '}
         <Text style={styles.link} onPress={onTermsOfUsePressed}>
-          Terms of Use
+          Terms of Use and Privacy Policy
         </Text>{' '}
-        and{' '}
-        <Text style={styles.link} onPress={onPrivacyPressed}>
-          Privacy Policy
-        </Text>
       </Text>
       <CustomButton
         text="Have an account? Sign in"
@@ -133,6 +130,12 @@ const styles = StyleSheet.create({
   },
   link: {
     color: '#FDB075',
+  },
+  logo: {
+    width: '70%',
+    height: '30%',
+    maxWidth: 300,
+    maxHeight: 200,
   },
 });
 

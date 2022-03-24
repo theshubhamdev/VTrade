@@ -15,6 +15,7 @@ const Stock = ({route, navigation}) => {
     fullExchangeName,
     regularMarketChange,
     regularMarketChangePercent,
+    tradeable,
   } = route.params;
   const [inWatchlist, setInWatchlist] = useState(
     watchlistStocks.includes(symbol),
@@ -94,6 +95,7 @@ const Stock = ({route, navigation}) => {
               symbol: symbol,
               difference: regularMarketChange?.toFixed(2),
               percentage: regularMarketChangePercent?.toFixed(2),
+              tradeable: tradeable,
             })
           }>
           <Text style={{color: 'white', fontWeight: 'bold'}}>BUY</Text>

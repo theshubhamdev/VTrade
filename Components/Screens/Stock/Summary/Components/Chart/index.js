@@ -25,6 +25,8 @@ const Chart = ({route}) => {
 
   const {api_key3} = useWatchlist();
   const fetchChart = async () => {
+    if (loading) return;
+    setLoading(true);
     try {
       const response = await fetchStockChart(
         route.params.data.symbol,
@@ -34,19 +36,17 @@ const Chart = ({route}) => {
     } catch (e) {
       console.error('error in fetchChart is', e);
     }
-  };
-  useEffect(() => {
-    if (loading) return;
-    setLoading(true);
-    fetchChart();
     setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchChart();
+    updateData(chartData);
   }, []);
   useEffect(() => {
     updateData(chartData);
   }, [chartData]);
   const updateData = async chartData => {
-    if (loading) return;
-    setLoading(true);
     let updatedTimeStamps = [];
     let updatedArray = [];
     chartData?.indicators?.quote[0]?.open?.map((open, i) => {
@@ -65,7 +65,6 @@ const Chart = ({route}) => {
     });
     setData(updatedArray);
     setTimeStamps(updatedTimeStamps);
-    setLoading(false);
   };
   const [marker, setMarker] = useState({
     enabled: true,
@@ -73,41 +72,9 @@ const Chart = ({route}) => {
     textColor: processColor('white'),
   });
   const [zoomXValue, setZoomXValue] = useState(0);
-
-  return loading ? (
-    <View style={{backgroundColor: '#0a0a0a', flex: 1}}>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: '#0a0a0a',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <ActivityIndicator size="large" />
-        <Text
-          style={{
-            color: 'white',
-            fontWeight: 'bold',
-            margin: 10,
-            fontSize: 17,
-          }}>
-          Loading Chart...
-        </Text>
-      </View>
-    </View>
-  ) : (
-    <View style={{backgroundColor: '#0a0a0a', flex: 1}}>
-      <View style={{flex: 1}}>
-        <View
-          style={{
-            backgroundColor: '#252525',
-            margin: 5,
-            borderRadius: 5,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <FilterBar />
-        </View>
+  if (data.length > 0)
+    return (
+      <View style={{backgroundColor: '#0a0a0a', flex: 1}}>
         <View
           style={{
             flex: 1,
@@ -159,6 +126,28 @@ const Chart = ({route}) => {
             }}
           />
         </View>
+      </View>
+    );
+
+  return (
+    <View style={{backgroundColor: '#0a0a0a', flex: 1}}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: '#0a0a0a',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <ActivityIndicator size="large" />
+        <Text
+          style={{
+            color: 'white',
+            fontWeight: 'bold',
+            margin: 10,
+            fontSize: 17,
+          }}>
+          Loading Chart...
+        </Text>
       </View>
     </View>
   );

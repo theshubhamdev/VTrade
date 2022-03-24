@@ -13,7 +13,7 @@ import {createOrder, updateUser} from '../../../src/graphql/mutations';
 import {useUserData} from '../../Contexts/UserDataContext';
 
 const OrderSummary = ({route, navigation}) => {
-  const {quantity, amount, symbol} = route.params;
+  const {quantity, amount, symbol, tradeable} = route.params;
   const {
     userid,
     availableToTrade,
@@ -29,6 +29,10 @@ const OrderSummary = ({route, navigation}) => {
   const OnSubmitOrder = async () => {
     if (loading) return;
     setLoading(true);
+    if (!tradeable) {
+      navigation.navigate('Home');
+      return Alert.alert('Unable to place order', 'Market is closed');
+    }
     const orderData = {
       status: 'PENDING',
       stock: symbol,

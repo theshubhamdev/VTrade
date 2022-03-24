@@ -6,13 +6,10 @@ import Quantity from './Quantity';
 import Footer from './Footer';
 
 const Order = ({navigation, route}) => {
-  const defaultChoice = route.params.option === 'BUY' ? true : false;
-  const [buy, setBuy] = useState(defaultChoice);
-  const [delivery, setDelivery] = useState(true);
   const [amount, setAmount] = useState(0);
   const [quantity, setQuantity] = useState(0);
 
-  const {symbol, price, percentage} = route.params;
+  const {symbol, price, percentage, tradeable} = route.params;
 
   useEffect(() => {
     const CalculateAmount = () => {
@@ -37,6 +34,7 @@ const Order = ({navigation, route}) => {
         quantity={quantity}
         navigation={navigation}
         symbol={symbol}
+        tradeable={tradeable}
       />
     </SafeAreaView>
   );

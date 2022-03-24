@@ -13,7 +13,7 @@ const SellOrder = ({route, navigation}) => {
   const orderVersion = route.params.orderDetails._version;
   const {userid, _version, availableToTrade, setAvailableToTrade} =
     useUserData();
-  const {regularMarketPrice} = stockDetails;
+  const {regularMarketPrice, tradeable} = stockDetails;
   const [squantity, setSquantity] = useState(0); //sell quantity
   const samount = squantity * regularMarketPrice; // sell amount
   const difference = samount - (amount / quantity) * squantity;
@@ -22,6 +22,10 @@ const SellOrder = ({route, navigation}) => {
   const OnClickSell = async () => {
     if (loading) return;
     setLoading(true);
+    if (!tradeable) {
+      navigation.navigate('Home');
+      return Alert.alert('Unable to place order', 'Market is closed');
+    }
     if (quantity <= 0 || squantity > quantity) {
       Alert.alert(
         'Quantity Error',

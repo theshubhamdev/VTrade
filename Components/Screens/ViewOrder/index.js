@@ -6,7 +6,7 @@ import Footer from './Footer';
 
 const ViewOrder = ({navigation, route}) => {
   const {stock, quantity, amount, stockDetails} = route.params;
-  const {regularMarketPrice} = stockDetails;
+  const {regularMarketPrice, tradeable} = stockDetails;
   const currentStatusPrice = (regularMarketPrice * quantity - amount).toFixed(
     2,
   );
@@ -18,6 +18,7 @@ const ViewOrder = ({navigation, route}) => {
     navigation.navigate('SellOrder', {
       orderDetails: route.params,
       currentStatusPercentage: currentStatusPercentage,
+      tradeable: tradeable,
     });
   };
   return (
