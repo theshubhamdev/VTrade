@@ -40,8 +40,8 @@ const SignInScreen = () => {
               id: response.attributes.sub,
               name: response.attributes.name,
               email: response.attributes.email,
-              vmoney: 10_00_000.0,
-              availableToTrade: 10_00_000.0,
+              vmoney: 200000.0,
+              availableToTrade: 200000.0,
             },
           }),
         );
