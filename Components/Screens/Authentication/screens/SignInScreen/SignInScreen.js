@@ -1,16 +1,19 @@
 import React, {useState} from 'react';
 import {
   View,
+  Text,
   Image,
   StyleSheet,
   useWindowDimensions,
+  ScrollView,
+  TextInput,
   Alert,
 } from 'react-native';
 import Logo from '../../../../../assets/images/Logo_1.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
-import {useForm} from 'react-hook-form';
+import {useForm, Controller} from 'react-hook-form';
 import {API, Auth, graphqlOperation} from 'aws-amplify';
 import {getUser} from '../../../../../src/graphql/queries';
 import {createUser} from '../../../../../src/graphql/mutations';
@@ -37,8 +40,8 @@ const SignInScreen = () => {
               id: response.attributes.sub,
               name: response.attributes.name,
               email: response.attributes.email,
-              vmoney: 2_00_000.0,
-              availableToTrade: 2_00_000.0,
+              vmoney: 10_00_000.0,
+              availableToTrade: 10_00_000.0,
             },
           }),
         );

@@ -6,50 +6,14 @@ import Stock from '../Screens/Stock';
 import Authentication from '../Screens/Authentication';
 import Order from '../Screens/Order';
 import OrderSummary from '../Screens/OrderSummary';
-import {
-  View,
-  ActivityIndicator,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import {View, ActivityIndicator, Text} from 'react-native';
 import {useUserData} from '../Contexts/UserDataContext';
 import ViewOrder from '../Screens/ViewOrder';
 import SellOrder from '../Screens/SellOrder';
-import {useWatchlist} from '../Contexts/WatchlistContext';
-import Logo from '../../assets/images/Logo_1.png';
 
 const RootStack = createStackNavigator();
 const Navigation = () => {
-  const {app_version} = useWatchlist();
   const {user} = useUserData();
-  const codeVersion = 1;
-  if (app_version > codeVersion) {
-    return (
-      <View
-        style={{
-          backgroundColor: '#0a0a0a',
-          flex: 1,
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-        }}>
-        <Image
-          source={Logo}
-          style={{
-            width: '70%',
-            maxWidth: 400,
-            maxHeight: 300,
-            height: '30%',
-          }}
-          resizeMode="contain"
-        />
-        <Text style={{color: 'white'}}>
-          Update the App from Play Store to Continue
-        </Text>
-      </View>
-    );
-  }
   if (user === undefined) {
     return (
       <View
