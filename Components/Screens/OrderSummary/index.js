@@ -29,46 +29,55 @@ const OrderSummary = ({route, navigation}) => {
   const OnSubmitOrder = async () => {
     if (loading) return;
     setLoading(true);
-    if (!tradeable) {
+    const marketOpen = 9 * 60 + 15; // minutes
+    const marketClosed = 15 * 60 + 30; // minutes
+    var now = new Date();
+    var currentTime = now.getHours() * 60 + now.getMinutes(); // Minutes since Midnight
+    if (now.getDay === 0 || now.getDay === 6) {
+      return Alert.alert('Unable to place order', 'Market is closed');
+    }
+    if (currentTime > marketOpen && currentTime < marketClosed) {
+      const orderData = {
+        status: 'PENDING',
+        stock: symbol,
+        amount: amount,
+        quantity: quantity,
+        userID: userid,
+      };
+      const moneyLeft = (availableToTrade - amount).toFixed(2);
+      if (moneyLeft < 0) {
+        Alert.alert(
+          'Insufficient funds',
+          `Amount exceeded, please remove ${moneyLeft} worth of quantity`,
+        );
+        return;
+      }
+      const input = {
+        id: userid,
+        availableToTrade: moneyLeft,
+        _version: _version,
+      };
+      try {
+        const response = await API.graphql(
+          graphqlOperation(updateUser, {input: input}),
+        );
+        setAvailableToTrade(response.data.updateUser.availableToTrade);
+        set_version(response.data.updateUser._version);
+        setVmoney(response.data.updateUser.vmoney);
+        const orderResponse = await API.graphql(
+          graphqlOperation(createOrder, {
+            input: orderData,
+          }),
+        );
+        navigation.navigate('Trades');
+      } catch (e) {
+        console.error('error in Order Summary', e);
+      }
+    } else {
       navigation.navigate('Home');
       return Alert.alert('Unable to place order', 'Market is closed');
     }
-    const orderData = {
-      status: 'PENDING',
-      stock: symbol,
-      amount: amount,
-      quantity: quantity,
-      userID: userid,
-    };
-    const moneyLeft = (availableToTrade - amount).toFixed(2);
-    if (moneyLeft < 0) {
-      Alert.alert(
-        'Insufficient funds',
-        `Amount exceeded, please remove ${moneyLeft} worth of quantity`,
-      );
-      return;
-    }
-    const input = {
-      id: userid,
-      availableToTrade: moneyLeft,
-      _version: _version,
-    };
-    try {
-      const response = await API.graphql(
-        graphqlOperation(updateUser, {input: input}),
-      );
-      setAvailableToTrade(response.data.updateUser.availableToTrade);
-      set_version(response.data.updateUser._version);
-      setVmoney(response.data.updateUser.vmoney);
-      const orderResponse = await API.graphql(
-        graphqlOperation(createOrder, {
-          input: orderData,
-        }),
-      );
-      navigation.navigate('Trades');
-    } catch (e) {
-      console.error('error in Order Summary', e);
-    }
+
     setLoading(false);
   };
 

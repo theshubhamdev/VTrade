@@ -55,7 +55,8 @@ const Search = ({navigation, route}) => {
         ) : (
           <>
             <Text style={{color: 'white', paddingVertical: 10}}>
-              Search results
+              Search results (if you don't find NSI data, add .ns at the end
+              while searching)
             </Text>
             <View>
               <FlatList

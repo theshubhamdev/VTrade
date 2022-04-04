@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, ScrollView, Alert} from 'react-native';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
@@ -12,11 +12,12 @@ const ConfirmEmailScreen = () => {
   const {control, handleSubmit, watch} = useForm({
     defaultValues: {email: route?.params?.email},
   });
-
+  const [sendOTP, setSendOTP] = useState(false);
   const email = watch('email');
-
   const navigation = useNavigation();
-
+  useEffect(() => {
+    setTimeout(() => setSendOTP(true), 60000);
+  }, []);
   const onConfirmPressed = async data => {
     try {
       await Auth.confirmSignUp(data.email, data.code);
@@ -31,27 +32,20 @@ const ConfirmEmailScreen = () => {
   };
 
   const onResendPress = async () => {
+    if (sendOTP) return;
     try {
       await Auth.resendSignUp(email);
       Alert.alert('Success', 'Code was resent to your email');
     } catch (e) {
       Alert.alert('Oops', e.message);
     }
+    setTimeout(() => setSendOTP(true), 60000);
   };
 
   return (
     <View style={styles.root}>
       <Text style={styles.title}>Confirm your email</Text>
-
-      <CustomInput
-        name="email"
-        control={control}
-        placeholder="Email"
-        rules={{
-          required: 'Email is required',
-        }}
-      />
-
+      <Text style={styles.title}>OTP sent on {email}</Text>
       <CustomInput
         name="code"
         control={control}
@@ -62,12 +56,17 @@ const ConfirmEmailScreen = () => {
       />
 
       <CustomButton text="Confirm" onPress={handleSubmit(onConfirmPressed)} />
-
-      <CustomButton
-        text="Resend code"
-        onPress={onResendPress}
-        type="SECONDARY"
-      />
+      {sendOTP ? (
+        <CustomButton
+          text="Resend code"
+          onPress={onResendPress}
+          type="SECONDARY"
+        />
+      ) : (
+        <Text style={{paddingVertical: 20}}>
+          Wait 1 minute before sending another OTP
+        </Text>
+      )}
 
       <CustomButton
         text="Back to Sign in"
@@ -88,7 +87,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#051C60',
+    color: 'white',
     margin: 10,
   },
   text: {

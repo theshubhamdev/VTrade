@@ -15,6 +15,7 @@ export const fetchStocks = async (stocksList, api_key1) => {
     });
     return response.data.quoteResponse.result;
   } catch (e) {
+    alert(e);
     console.error(e);
   }
 };
@@ -31,6 +32,7 @@ export const fetchStock = async (symbol, api_key) => {
     const response = await axios.get(options.url, options);
     return response.data.quoteResponse.result;
   } catch (e) {
+    alert(e);
     console.error(e);
   }
 };
@@ -49,6 +51,7 @@ export const searchStocks = async (search, api_key) => {
     const response = await axios.get(optionsSearch.url, optionsSearch);
     return response.data.ResultSet.Result;
   } catch (e) {
+    alert(e);
     console.error(e);
   }
 };
@@ -64,11 +67,7 @@ export const fetchStockChart = async (ticker, api_key) => {
     );
     return response.data.chart.result[0];
   } catch (e) {
+    alert(e);
     console.error(e);
   }
 };
-
-//API key 1 zT3IGbFLs97MgH79Z7S7b6aTRfxsDSH6tKRrWVDf sh
-//API key 2 R4kXV1oUGn21uYalfufB48d3gLw3sk9JaVN5jR0c sl
-//API key 3 M761NnOQhM2BAjHHmZYDDFoiVSnDYdSUjl5EyQ80 tm1
-//API key 4 l0Go8BbMlI3YX9pFG8tNc8b2VWtVXwLw8uTdo83m tm2

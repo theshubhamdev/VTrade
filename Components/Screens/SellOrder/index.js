@@ -22,50 +22,57 @@ const SellOrder = ({route, navigation}) => {
   const OnClickSell = async () => {
     if (loading) return;
     setLoading(true);
-    if (!tradeable) {
-      navigation.navigate('Home');
+    const marketOpen = 9 * 60 + 15; // minutes
+    const marketClosed = 15 * 60 + 30; // minutes
+    var now = new Date();
+    var currentTime = now.getHours() * 60 + now.getMinutes(); // Minutes since Midnight
+    if (now.getDay === 0 || now.getDay === 6) {
       return Alert.alert('Unable to place order', 'Market is closed');
     }
-    if (quantity <= 0 || squantity > quantity) {
-      Alert.alert(
-        'Quantity Error',
-        `Quantity Must be between 1 and ${quantity}`,
-      );
-      return;
-    }
-    let input = {};
-    if (squantity === quantity) {
-      input = {
-        id: id,
-        _version: orderVersion,
-        amount: 0,
-        quantity: quantity - squantity,
-        status: 'SUCCESS',
-      };
+    if (currentTime > marketOpen && currentTime < marketClosed) {
+      if (quantity <= 0 || squantity > quantity) {
+        Alert.alert(
+          'Quantity Error',
+          `Quantity Must be between 1 and ${quantity}`,
+        );
+        return;
+      }
+      let input = {};
+      if (squantity === quantity) {
+        input = {
+          id: id,
+          _version: orderVersion,
+          amount: 0,
+          quantity: quantity - squantity,
+          status: 'SUCCESS',
+        };
+      } else {
+        input = {
+          id: id,
+          _version: orderVersion,
+          amount: (amount - samount).toFixed(2),
+          quantity: quantity - squantity,
+        };
+      }
+      try {
+        const response = await API.graphql(
+          graphqlOperation(updateOrder, {input: input}),
+        );
+        const updateUserMoney = await API.graphql(
+          graphqlOperation(updateUser, {
+            input: {
+              id: userid,
+              availableToTrade: (availableToTrade + samount).toFixed(2),
+              _version: _version,
+            },
+          }),
+        );
+        setAvailableToTrade(updateUserMoney.data.updateUser.availableToTrade);
+      } catch (error) {
+        console.error(error);
+      }
     } else {
-      input = {
-        id: id,
-        _version: orderVersion,
-        amount: (amount - samount).toFixed(2),
-        quantity: quantity - squantity,
-      };
-    }
-    try {
-      const response = await API.graphql(
-        graphqlOperation(updateOrder, {input: input}),
-      );
-      const updateUserMoney = await API.graphql(
-        graphqlOperation(updateUser, {
-          input: {
-            id: userid,
-            availableToTrade: (availableToTrade + samount).toFixed(2),
-            _version: _version,
-          },
-        }),
-      );
-      setAvailableToTrade(updateUserMoney.data.updateUser.availableToTrade);
-    } catch (error) {
-      console.error(error);
+      return Alert.alert('Unable to place order', 'Market is closed');
     }
 
     setLoading(false);
