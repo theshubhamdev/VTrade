@@ -8,34 +8,58 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ListItem from '../../Components/ListItem';
-import {fetchStocks} from '../../Helpers/Data';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useWatchlist} from '../../Contexts/WatchlistContext';
 import {urlOpener} from '../../../App';
+import {getMarketData} from '../../Helpers/Data';
 
 const Home = ({navigation}) => {
-  const {watchlistStocks, removeWatchlistStock, api_key1} = useWatchlist();
-  const [stock, setStock] = useState([]);
+  const {watchlistStocks, removeWatchlistStock} = useWatchlist();
+  const [coins, setCoins] = useState([]);
   const [loading, setLoading] = useState(false);
-  const fetchStocksData = async () => {
+
+  const fetchCoins = async pageNumber => {
     if (loading) {
       return;
     }
     setLoading(true);
-    const stockData = await fetchStocks(watchlistStocks.join(), api_key1);
-    setStock(stockData);
+    const coinsData = await getMarketData(pageNumber);
+    setCoins(existingCoins => [...existingCoins, ...coinsData]);
     setLoading(false);
   };
-  useEffect(() => {
-    if (watchlistStocks?.length > 0) {
-      fetchStocksData();
+
+  const refetchCoins = async () => {
+    if (loading) {
+      return;
     }
+    setLoading(true);
+    const coinsData = await getMarketData();
+    setCoins(coinsData);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchCoins();
   }, []);
-  useEffect(() => {
-    if (watchlistStocks?.length > 0) {
-      fetchStocksData();
-    }
-  }, [watchlistStocks]);
+  // const fetchStocksData = async () => {
+  //   if (loading) {
+  //     return;
+  //   }
+  //   setLoading(true);
+  //   const stockData = await fetchStocks(watchlistStocks.join(), api_key1);
+  //   setStock(stockData);
+  //   setLoading(false);
+  // };
+  // useEffect(() => {
+  //   if (watchlistStocks?.length > 0) {
+  //     fetchStocksData();
+  //   }
+  // }, []);
+  // useEffect(() => {
+  //   if (watchlistStocks?.length > 0) {
+  //     fetchStocksData();
+  //   }
+  // }, [watchlistStocks]);
   return (
     <SafeAreaView style={{backgroundColor: '#0a0a0a', flex: 1, padding: 10}}>
       <View style={{flexDirection: 'row', alignItems: 'center', padding: 5}}>
@@ -57,7 +81,7 @@ const Home = ({navigation}) => {
         </TouchableOpacity>
       </View>
 
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      {/* <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Text
           style={{
             color: 'white',
@@ -77,10 +101,10 @@ const Home = ({navigation}) => {
           }}>
           You can add upto 10 items
         </Text>
-      </View>
+      </View> */}
 
       <FlatList
-        data={stock}
+        data={coins}
         renderItem={({item}) => (
           <ListItem
             data={item}
@@ -88,11 +112,12 @@ const Home = ({navigation}) => {
             removeWatchlistStock={removeWatchlistStock}
           />
         )}
+        onEndReached={() => fetchCoins(coins.length / 50 + 1)}
         refreshControl={
           <RefreshControl
             refreshing={loading}
             tintColor="white"
-            onRefresh={watchlistStocks?.length > 0 ? fetchStocksData : null}
+            onRefresh={refetchCoins}
           />
         }
       />

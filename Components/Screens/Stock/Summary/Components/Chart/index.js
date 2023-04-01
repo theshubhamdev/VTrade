@@ -1,37 +1,26 @@
-import {
-  View,
-  Text,
-  processColor,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
+import {View, Text, processColor, ActivityIndicator} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {CandleStickChart} from 'react-native-charts-wrapper';
-import {fetchStockChart} from '../../../../../Helpers/Data';
+import {getCoinMarketChart} from '../../../../../Helpers/Data';
 import {
   GetDate,
   GetFullDateInfo,
   GetMinutes,
   GetMonth,
 } from '../../../../../Helpers/Utils/ConvertData';
-import FilterBar from './FilterBar';
-import {useWatchlist} from '../../../../../Contexts/WatchlistContext';
 
-const Chart = ({route}) => {
+const Chart = ({data: propdata}) => {
   const [data, setData] = useState([]);
   const [timeStamps, setTimeStamps] = useState([]);
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const {api_key3} = useWatchlist();
   const fetchChart = async () => {
     if (loading) return;
     setLoading(true);
     try {
-      const response = await fetchStockChart(
-        route.params.data.symbol,
-        api_key3,
-      );
+      const response = await getCoinMarketChart(propdata.id);
+      console.warn(response);
       setChartData(response);
     } catch (e) {
       console.error('error in fetchChart is', e);
@@ -43,13 +32,16 @@ const Chart = ({route}) => {
     fetchChart();
     updateData(chartData);
   }, []);
+
   useEffect(() => {
     updateData(chartData);
   }, [chartData]);
+
   const updateData = async chartData => {
     let updatedTimeStamps = [];
     let updatedArray = [];
-    chartData?.indicators?.quote[0]?.open?.map((open, i) => {
+    console.warn(chartData);
+    chartData?.prices?.quote[0]?.open?.map((open, i) => {
       let object = {
         open: open,
         close: chartData.indicators.quote[0].close[i],
@@ -66,13 +58,15 @@ const Chart = ({route}) => {
     setData(updatedArray);
     setTimeStamps(updatedTimeStamps);
   };
+
   const [marker, setMarker] = useState({
     enabled: true,
     markerColor: processColor('#2c3e50'),
     textColor: processColor('white'),
   });
+
   const [zoomXValue, setZoomXValue] = useState(0);
-  if (data.length > 0)
+  if (data && data.length > 0)
     return (
       <View style={{backgroundColor: '#0a0a0a', flex: 1}}>
         <View
@@ -95,7 +89,7 @@ const Chart = ({route}) => {
               dataSets: [
                 {
                   values: data,
-                  label: route.params.data.symbol,
+                  label: propdata.symbol,
                   config: {
                     highlightColor: processColor('darkgray'),
                     shadowColor: processColor('black'),

@@ -9,10 +9,6 @@ export const useWatchlist = () => useContext(WatchlistContext);
 
 const WatchlistProvider = ({children}) => {
   const [watchlistStocks, setWatchlistStocks] = useState([]);
-  const [api_key1, setApi_key1] = useState();
-  const [api_key2, setApi_key2] = useState();
-  const [api_key3, setApi_key3] = useState();
-  const [api_key4, setApi_key4] = useState();
   const [app_version, setApp_version] = useState();
   const [update_required, setUpdate_required] = useState(false);
 
@@ -23,10 +19,6 @@ const WatchlistProvider = ({children}) => {
           id: '2bd6ad1c-e7a8-49a3-9e72-2d2159052054',
         }),
       );
-      setApi_key1(response.data.getDefaultValues.Api_key1);
-      setApi_key2(response.data.getDefaultValues.Api_key2);
-      setApi_key3(response.data.getDefaultValues.Api_key3);
-      setApi_key4(response.data.getDefaultValues.Api_key4);
       setApp_version(response.data.getDefaultValues.App_version);
       setUpdate_required(response.data.getDefaultValues.update_required);
     } catch (err) {
@@ -41,15 +33,15 @@ const WatchlistProvider = ({children}) => {
         const newWatchlist = await AsyncStorage.setItem(
           '@watchlist_stocks',
           JSON.stringify([
-            'TCS.NS',
-            'RELIANCE.NS',
-            'HDFC.NS',
-            'ACC.NS',
-            'INFY.NS',
-            'SBILIFE.NS',
-            'TATACHEM.NS',
-            'HDFCLIFE.NS',
-            'ICICIPRULI.NS',
+            'bitcoin',
+            'ethereum',
+            'tether',
+            'binancecoin',
+            'usd-coin',
+            'binance-usd',
+            'ripple',
+            'dogecoin',
+            'cardano',
           ]),
         );
         setWatchlistStocks(newWatchlist);
@@ -95,10 +87,6 @@ const WatchlistProvider = ({children}) => {
         storeWatchlistStock,
         removeWatchlistStock,
         clearData,
-        api_key1,
-        api_key2,
-        api_key3,
-        api_key4,
         app_version,
         update_required,
       }}>

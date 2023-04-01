@@ -4,18 +4,18 @@ import Header from './Header';
 import MainDetails from './MainDetails';
 import {useWatchlist} from '../../Contexts/WatchlistContext';
 import StockNavigation from './StockNavigation';
+import Chart from './Summary/Components/Chart';
 
 const Stock = ({route, navigation}) => {
   const {watchlistStocks, removeWatchlistStock, storeWatchlistStock} =
     useWatchlist();
   const {
     symbol,
-    longName,
-    regularMarketPrice,
+    name,
     fullExchangeName,
-    regularMarketChange,
-    regularMarketChangePercent,
-    tradeable,
+    current_price,
+    price_change_24h,
+    price_change_percentage_24h,
   } = route.params;
   const [inWatchlist, setInWatchlist] = useState(
     watchlistStocks.includes(symbol),
@@ -70,15 +70,16 @@ const Stock = ({route, navigation}) => {
           AddStock={AddStock}
         />
         <MainDetails
-          difference={regularMarketChange?.toFixed(2)}
-          percentage={regularMarketChangePercent?.toFixed(2)}
+          difference={price_change_24h?.toFixed(2)}
+          percentage={price_change_percentage_24h?.toFixed(2)}
           symbol={symbol}
           lastUpdateTime={'not available'}
-          companyName={longName}
-          buyPrice1={regularMarketPrice}
+          companyName={name}
+          buyPrice1={current_price}
         />
       </View>
-      <StockNavigation data={route.params} />
+      {/* <StockNavigation data={route.params} /> */}
+      <Chart data={route.params} />
       <View style={{flexDirection: 'row', marginTop: 'auto'}}>
         <TouchableOpacity
           style={{
@@ -91,10 +92,10 @@ const Stock = ({route, navigation}) => {
           }}
           onPress={() =>
             navigation.navigate('Order', {
-              price: regularMarketPrice,
+              price: current_price,
               symbol: symbol,
-              difference: regularMarketChange?.toFixed(2),
-              percentage: regularMarketChangePercent?.toFixed(2),
+              difference: price_change_24h?.toFixed(2),
+              percentage: price_change_percentage_24h?.toFixed(2),
               tradeable: tradeable,
             })
           }>

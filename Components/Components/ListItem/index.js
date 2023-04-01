@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Image} from 'react-native';
 import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
@@ -6,11 +6,10 @@ const ListItem = ({data, watchlist, removeWatchlistStock}) => {
   const Navigation = useNavigation();
   const {
     symbol,
-    regularMarketPrice,
-    regularMarketChange,
-    regularMarketChangePercent,
-    shortName,
-    tradeable,
+    current_price,
+    price_change_24h,
+    name,
+    price_change_percentage_24h,
   } = data;
   const [loading, setLoading] = useState(false);
   const RemoveStock = () => {
@@ -22,7 +21,7 @@ const ListItem = ({data, watchlist, removeWatchlistStock}) => {
     setLoading(false);
   };
 
-  const sign = regularMarketChange > 0 ? '+' : '';
+  const sign = price_change_24h > 0 ? '+' : '';
   return (
     <TouchableOpacity
       style={{
@@ -33,13 +32,18 @@ const ListItem = ({data, watchlist, removeWatchlistStock}) => {
         borderBottomColor: '#808080',
         borderBottomWidth: 0.2,
         display: 'flex',
+        alignItems: 'center',
       }}
       onPress={() => Navigation.navigate('Stock', data)}>
+      <Image
+        style={{width: 30, height: 30, borderRadius: 15, marginHorizontal: 10}}
+        source={{uri: data.image}}
+      />
       <View>
         <Text style={{color: 'white', fontSize: 18, fontWeight: 'bold'}}>
-          {symbol}
+          {name}
         </Text>
-        <Text style={{color: 'grey'}}>{shortName}</Text>
+        <Text style={{color: 'grey'}}>{symbol}</Text>
       </View>
       <View style={{marginLeft: 'auto'}}>
         <Text
@@ -48,13 +52,13 @@ const ListItem = ({data, watchlist, removeWatchlistStock}) => {
             fontSize: 17,
             fontWeight: 'bold',
           }}>
-          ₹{regularMarketPrice.toFixed(2)}
+          ${current_price.toFixed(2)}
         </Text>
         <View style={{flexDirection: 'row', flex: 1}}>
           <View style={{flexDirection: 'row'}}>
             <Text style={{color: sign === '+' ? '#79ea86' : '#e75757'}}>
               {sign}
-              {regularMarketChange.toFixed(2)}
+              {price_change_24h.toFixed(2)}
             </Text>
             <Text
               style={{
@@ -63,7 +67,7 @@ const ListItem = ({data, watchlist, removeWatchlistStock}) => {
               }}>
               {' '}
               {sign}
-              {regularMarketChangePercent.toFixed(2)}%
+              {price_change_percentage_24h.toFixed(2)}%
             </Text>
           </View>
         </View>

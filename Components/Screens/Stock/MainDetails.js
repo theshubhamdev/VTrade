@@ -15,7 +15,7 @@ const MainDetails = ({
       </View>
       <View style={{flexDirection: 'row', alignItems: 'baseline'}}>
         <View style={{flexDirection: 'row', alignItems: 'baseline'}}>
-          <Text style={{color: 'white', fontSize: 20}}>₹ </Text>
+          <Text style={{color: 'white', fontSize: 20}}>$ </Text>
           <Text style={{color: 'white', fontSize: 40}}>
             {buyPrice1.toFixed(2)}
           </Text>

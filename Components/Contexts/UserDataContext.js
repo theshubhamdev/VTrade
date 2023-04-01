@@ -29,6 +29,7 @@ const UserDataProvider = ({children}) => {
       }
     }
   };
+
   const checkUser = async () => {
     try {
       const authUser = await Auth.currentAuthenticatedUser({
@@ -40,9 +41,11 @@ const UserDataProvider = ({children}) => {
       setUser(null);
     }
   };
+
   useEffect(() => {
     checkUser();
   }, []);
+
   useEffect(() => {
     const listener = data => {
       if (data.payload.event === 'signIn' || data.payload.event === 'signOut') {
@@ -53,12 +56,15 @@ const UserDataProvider = ({children}) => {
     Hub.listen('auth', listener);
     return () => Hub.remove('auth', listener);
   }, []);
+
   useEffect(() => {
     fetchUserData();
   }, [userid]);
+
   const updateDataProfile = async () => {
     await fetchUserData();
   };
+
   return (
     <UserDataContext.Provider
       value={{
